@@ -1,9 +1,16 @@
+#include "Engine.hpp"
+
 #include <iostream>
-#include <GLFW/glfw3.h>
 
 int main()
 {
-	std::cout << "Hello world!" << std::endl;
+	std::cout << "A* Demo ver 0.1" << std::endl;
 
-	return 0;
+  Engine engine;
+
+  if (engine.construct(800, 600))
+    engine.start();
+
+
+  return 0;
 }

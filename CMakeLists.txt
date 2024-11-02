@@ -13,6 +13,8 @@ find_package(OpenGL REQUIRED)
 
 add_executable(Demo 
 	src/Main.cpp
+	src/Engine.cpp
+	src/Renderer.cpp
 )
 set_property(TARGET Demo PROPERTY CXX_STANDARD 20)
 
@@ -22,6 +24,7 @@ target_link_directories(Demo PRIVATE
 )
 
 target_include_directories(Demo
+	PUBLIC include
 	PUBLIC lib/glad/include
 	PUBLIC lib/glfw/include
 )
