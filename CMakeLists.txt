@@ -14,9 +14,10 @@ find_package(OpenGL REQUIRED)
 add_executable(Demo
 	src/Main.cpp
 	src/Engine.cpp
+	src/Rectangle.cpp
 	src/Renderer.cpp
-	src/PathFind/A-Star.cpp
-	src/PathFind/Common.cpp
+	src/PathFind/PathFinder.cpp
+	src/PathFind/Map.cpp
 )
 set_property(TARGET Demo PROPERTY CXX_STANDARD 20)
 

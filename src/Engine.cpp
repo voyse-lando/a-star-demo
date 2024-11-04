@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "Engine.hpp"
+#include "Rectangle.hpp"
 
 Engine::Engine()
 {
@@ -12,7 +13,7 @@ Engine::Engine()
   //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 }
 
-bool Engine::construct(UInt32 width, UInt32 height)
+bool Engine::construct(std::uint32_t width, std::uint32_t height)
 {
   window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
   if (window == NULL)
@@ -38,10 +39,15 @@ bool Engine::construct(UInt32 width, UInt32 height)
 
 void Engine::start()
 {
+	// renderer.create_data();
+	if (!on_create()) {
+		glfwTerminate();
+		return;
+	}
+	
   while(!glfwWindowShouldClose(window))
   {
-    glClearColor(.2f, .2f, .4f, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT);
+		if(!on_update()) break;
 
     glfwSwapBuffers(window);
     glfwPollEvents();

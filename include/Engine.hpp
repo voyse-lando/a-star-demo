@@ -9,13 +9,16 @@ class GLFWwindow;
 
 class Engine
 {
-private:
+protected:
   GLFWwindow *window;
   Renderer renderer;
 public:
   Engine();
 
-  bool construct(UInt32 width, UInt32 height);
+	virtual bool on_create() = 0;
+	virtual bool on_update() = 0;
+
+  bool construct(std::uint32_t width, std::uint32_t height);
   void start();
 };
 
