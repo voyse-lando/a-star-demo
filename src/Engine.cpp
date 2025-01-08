@@ -1,8 +1,14 @@
+#include <cstdlib>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "Engine.hpp"
-#include "Rectangle.hpp"
+
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	Common::windowSize = {width, height};
+    glViewport(0, 0, width, height);
+}  
 
 Engine::Engine()
 {
@@ -15,7 +21,7 @@ Engine::Engine()
 
 bool Engine::construct(std::uint32_t width, std::uint32_t height)
 {
-  window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
+  window = glfwCreateWindow(width, height, appName.data(), NULL, NULL);
   if (window == NULL)
   {
       std::cerr << "Failed to create GLFW window" << std::endl;
@@ -32,7 +38,8 @@ bool Engine::construct(std::uint32_t width, std::uint32_t height)
     return false;
   }
   
-  renderer.setViewport(0, 0, width, height);
+  glViewport(0, 0, width, height);
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); 
   return true;
 }
 
@@ -45,13 +52,15 @@ void Engine::start()
 		return;
 	}
 	
-  while(!glfwWindowShouldClose(window))
-  {
+	while(!glfwWindowShouldClose(window))
+	{
 		if(!on_update()) break;
 
-    glfwSwapBuffers(window);
-    glfwPollEvents();
-  }
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
 
-  glfwTerminate();
+	this->before_exit();
+
+  	glfwTerminate();
 }

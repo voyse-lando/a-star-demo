@@ -14,10 +14,16 @@ find_package(OpenGL REQUIRED)
 add_executable(Demo
 	src/Main.cpp
 	src/Engine.cpp
-	src/Rectangle.cpp
-	src/Renderer.cpp
-	src/PathFind/PathFinder.cpp
-	src/PathFind/Map.cpp
+	# src/Rectangle.cpp
+	# src/Renderer.cpp
+	# src/PathFind/PathFinder.cpp
+	# src/PathFind/Map.cpp
+	src/Object.cpp
+	src/Shader.cpp
+	src/Common.cpp
+	src/Map/Map.cpp
+	src/Map/Rectangle.cpp
+	src/World/World.cpp
 )
 set_property(TARGET Demo PROPERTY CXX_STANDARD 20)
 
@@ -43,7 +49,7 @@ if (WIN32)
 	)
 elseif (UNIX)
 	target_link_libraries(Demo
-		glfw GLAD OpenGL::GL X11::X11 X11::Xrandr X11::Xi dl
+		glfw GLAD OpenGL::GL X11::X11 X11::Xrandr X11::Xi atomic dl
 	)
 endif ()
 

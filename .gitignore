@@ -2,3 +2,5 @@ build
 .vscode
 .venv
 .cache
+*.local
+*.local.*
