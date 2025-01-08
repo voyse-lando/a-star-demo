@@ -1,12 +1,10 @@
 #pragma once
-#include <deque>
 #ifndef WORLD_WORLD_HPP_
 #define WORLD_WORLD_HPP_
 #include "Common.hpp"
 #include "Map/Map.hpp"
 #include <initializer_list>
 #include <optional>
-#include <queue>
 #include <vector>
 
 enum class TileType {
