@@ -1,7 +1,7 @@
 #include "Common.hpp"
 #include <chrono>
 
-vi2d Common::windowSize = {600, 600};
+vu2d Common::windowSize = {600, 600};
 float Common::zNear = .1f, Common::zFar = 100.0f;
 
 std::chrono::milliseconds Common::pathDelay = 0ms;

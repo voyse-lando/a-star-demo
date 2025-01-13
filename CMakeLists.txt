@@ -24,8 +24,10 @@ add_executable(Demo
 	src/Map/Map.cpp
 	src/Map/Rectangle.cpp
 	src/World/World.cpp
+	src/Config/Config.cpp
 )
 set_property(TARGET Demo PROPERTY CXX_STANDARD 20)
+configure_file(config.toml config.toml COPYONLY)
 
 target_link_directories(Demo PRIVATE
 	PRIVATE lib/glad/src

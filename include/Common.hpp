@@ -51,10 +51,13 @@ struct v4d {
 };
 
 typedef v2d<i32> vi2d;
+typedef v2d<u32> vu2d;
 typedef v2d<float> vf2d;
 typedef v3d<i32> vi3d;
+typedef v3d<u32> vu3d;
 typedef v3d<float> vf3d;
 typedef v4d<i32> vi4d;
+typedef v4d<u32> vu4d;
 typedef v4d<float> vf4d;
 
 #define NO_EXPAND(_v1d) _v1d
@@ -68,7 +71,7 @@ private:
 	static std::array<float, 16> projectionScaleMatrix;
 	static std::array<float, 16> projectionTranslateMatrix;
 public:
-	static vi2d windowSize;
+	static vu2d windowSize;
 	static float zNear, zFar;
 
 	static std::chrono::milliseconds pathDelay;

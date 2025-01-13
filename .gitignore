@@ -4,3 +4,6 @@ build
 .cache
 *.local
 *.local.*
+grid.txt
+config.toml
+map_generator*

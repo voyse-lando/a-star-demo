@@ -6,20 +6,21 @@
 
 class GLFWwindow;
 
-class Engine
-{
+class Engine {
 protected:
-  GLFWwindow *window;
-  std::string appName;
+	GLFWwindow *window;
+	std::string appName;
+
+	void set_window_size(const vu2d &size);
 public:
-  Engine();
+  	Engine();
 
 	virtual bool on_create() = 0;
 	virtual bool on_update() = 0;
 	virtual void before_exit() {};
 
-  bool construct(std::uint32_t width, std::uint32_t height);
-  void start();
+	bool construct(std::uint32_t width, std::uint32_t height);
+	void start();
 };
 
 #endif // !ENGINE_H_

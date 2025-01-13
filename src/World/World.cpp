@@ -2,9 +2,12 @@
 #include "Common.hpp"
 #include <algorithm>
 #include <cmath>
+#include <fstream>
 #include <iostream>
 #include <mutex>
 #include <optional>
+#include <sstream>
+#include <string>
 #include <thread>
 #include <vector>
 
@@ -38,10 +41,38 @@ World::World(
 
 	tiles.reserve(w * h);
 	for (i32 i = 0; i < w*h; i++) {
-		tiles.push_back(*(ts.begin() + i));
+		if (ts.begin() + i >= ts.end())
+			tiles.push_back(PATH);
+		else
+			tiles.push_back(*(ts.begin() + i));
 	}
 
 	update_map();
+}
+
+World World::from_grid_file(
+	u32 w,
+	u32 h,
+	std::optional<Map> *m,
+	const std::string &path	
+) {
+	World world = World(w, h, m, {});
+	std::ifstream ifs(path);
+	if (!ifs.good()) {
+		std::cout << "Warning: file `" << path << "` could not be read.\n";
+		return World(world);
+	}
+	std::string line;
+	for (u32 j = 0; j < h && std::getline(ifs, line); j++) {
+		std::istringstream iss(line);
+		std::string digit;
+		for (u32 k = 0; k < w && std::getline(iss, digit, ' '); k++) {
+			if (digit == "0") world.tile(k, j).type = TileType::PATH;
+			else if (digit == "5") world.tile(k, j).type = TileType::WALL;
+		}
+	}
+
+	return World(world);
 }
 
 World::World(const World &world) {
@@ -123,20 +154,20 @@ float calculate_distance(
 	const vi2d &e
 ) {
 	return std::sqrt(
-		std::powf(b.x - e.x, 2) + std::powf(b.y - e.y, 2)
+		std::powf(b.x - e.x, 2.0f) + std::powf(b.y - e.y, 2.0f)
 	);
 }
 std::vector<vi2d> World::get_neighbours(const vi2d &target) {
 	std::vector<vi2d> ret;
 
 	const auto x = target.x, y = target.y;
-	if (y + 1 < height && tile(x, y+1).type != TileType::WALL) {
-		std::cout << "UP " << x << ' ' << y+1 << '\n';
-		ret.push_back({x, y+1});
-	}
 	if (y - 1 >= 0 && tile(x, y-1).type != TileType::WALL) {
-		std::cout << "DOWN " << x << ' ' << y-1 << '\n';
+		std::cout << "UP " << x << ' ' << y-1 << '\n';
 		ret.push_back({x, y-1});
+	}
+	if (y + 1 < height && tile(x, y+1).type != TileType::WALL) {
+		std::cout << "DOWN " << x << ' ' << y+1 << '\n';
+		ret.push_back({x, y+1});
 	}
 	if (x + 1 < width && tile(x+1, y).type != TileType::WALL) {
 		std::cout << "RIGHT " << x+1 << ' ' << y << '\n';
@@ -178,30 +209,24 @@ std::optional<std::vector<vi2d>> World::find_path_to(vi2d target) {
 	});
 
 	while (!openList.empty()) {
-		auto x = *std::min_element(
+		auto min = *std::min_element(
 			openList.begin(),
 			openList.end(),
 			[](const Node &lhs, const Node &rhs) { return lhs.f <= rhs.f; }
 		);
-		if (x.pos == target) return get_route(x, closedList);
+		if (min.pos == target) return get_route(min, closedList);
 		
-		std::cout << "Before:\n";
-		for (auto &z : openList) {
-			std::cout << z.pos.x << ' ' << z.pos.y << '\n';
-		}
-
-		std::cout << "After:\n";
 		for (auto it = openList.begin(); it != openList.end();) {
-			if (it->pos == x.pos)
+			if (it->pos == min.pos)
 				it = openList.erase(it);
 			else
 				++it;
 		}
 		
-		closedList.push_back(x);
-		set_tile_state(x.pos, TileState::CLOSED_LIST);
+		closedList.push_back(min);
+		set_tile_state(min.pos, TileState::CLOSED_LIST);
 
-		auto neighbours = get_neighbours(x.pos);
+		auto neighbours = get_neighbours(min.pos);
 		for (auto &neighbour : neighbours) {
 			if (
 				std::find_if(
@@ -210,7 +235,7 @@ std::optional<std::vector<vi2d>> World::find_path_to(vi2d target) {
 				) != closedList.end()
 			) continue;
 
-			float g = x.g + 1;
+			float g = min.g + 1;
 			float h = calculate_distance(neighbour, target);
 
 			std::vector<Node>::iterator found = std::find_if(
@@ -220,12 +245,12 @@ std::optional<std::vector<vi2d>> World::find_path_to(vi2d target) {
 
 			if (found == openList.end()) {
 				openList.push_back({
-					neighbour, x.pos, g, g+h
+					neighbour, min.pos, g, g+h
 				});
 				set_tile_state(neighbour, TileState::OPEN_LIST);
 			}
 			else if (g < found->g) {
-				found->parent = x.pos;
+				found->parent = min.pos;
 				found->g = g;
 				found->f = g + h;
 			}
@@ -244,6 +269,7 @@ void World::reset_tiles() {
 }
 
 void World::move_player_to(vi2d target) {
+	if (tile(V2D_EXPAND(target)).type == TileType::WALL) return;
 	auto path = find_path_to(target);
 
 	if (path == std::nullopt) {

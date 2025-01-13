@@ -3,10 +3,11 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "Engine.hpp"
+#include "Common.hpp"
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	Common::windowSize = {width, height};
+	Common::windowSize = {(u32)width, (u32)height};
     glViewport(0, 0, width, height);
 }  
 
@@ -19,7 +20,12 @@ Engine::Engine()
   //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 }
 
-bool Engine::construct(std::uint32_t width, std::uint32_t height)
+void Engine::set_window_size(const vu2d &size) {
+	Common::windowSize = size;
+	glfwSetWindowSize(window, V2D_EXPAND(size));
+}
+
+bool Engine::construct(u32 width, u32 height)
 {
   window = glfwCreateWindow(width, height, appName.data(), NULL, NULL);
   if (window == NULL)

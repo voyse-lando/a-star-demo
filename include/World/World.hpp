@@ -56,6 +56,13 @@ public:
 		std::initializer_list<Tile> tiles
 	);
 
+	static World from_grid_file(
+		u32 width,
+		u32 height,
+		std::optional<Map> *map,
+		const std::string &path	
+	);
+
 	explicit World(const World &world);
 	explicit World(World &&world);
 	World &operator=(World &&world);
