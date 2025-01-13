@@ -47,7 +47,7 @@ endif ()
 
 if (WIN32)
 	target_link_libraries(Demo
-		glfw GLAD OpenGL::GL shell32 user32 winm gdi32
+		glfw GLAD OpenGL::GL shell32 user32 gdi32 atomic
 	)
 elseif (UNIX)
 	target_link_libraries(Demo

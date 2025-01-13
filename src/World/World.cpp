@@ -28,6 +28,7 @@ vf4d World::tileColor(const Tile &tile) {
 	case TileType::PATH:
 		return colors[(u32)tile.state];
 	}
+	return vf4d{.0f, .0f, .0f, 1.0f};
 }
 
 World::World(
