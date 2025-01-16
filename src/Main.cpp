@@ -13,6 +13,7 @@
 // #include "PathFind/PathFinder.hpp"
 
 #include <iostream>
+#include <memory>
 #include <optional>
 // #include <vector>
 // #include <thread>
@@ -24,7 +25,7 @@ using namespace std::chrono_literals;
 
 class AStarDemo : public Engine {
 protected:
-	std::optional<Map> map;
+	std::shared_ptr<GLMap> map;
 	std::optional<World> world;
 
 	bool moving, delayChanged;
@@ -38,11 +39,14 @@ public:
 	}
 
 	bool on_create() override {
-		// find = {pf::Map(9, 9, 
+		map = std::make_shared<GLMap>(GLMap(
+			config.mapWidth.value,
+			config.mapHeight.value
+		));
 		world = World::from_grid_file(
 			config.mapWidth.value,
 			config.mapHeight.value,
-			&map,
+			map.get(),
 			config.mapDefinitionsFilePath.value
 		);
 		world->set_player_pos({config.playerX.value, config.playerY.value});
@@ -89,7 +93,7 @@ public:
 			world = World::from_grid_file(
 				config.mapWidth.value,
 				config.mapHeight.value,
-				&map,
+				map.get(),
 				config.mapDefinitionsFilePath.value
 			);
 			world->set_player_pos({config.playerX.value, config.playerY.value});
@@ -108,9 +112,46 @@ public:
 	}
 };
 
-int main()
-{
-	std::cout << "A* Demo ver 1.0" << std::endl;
+void console() {
+	Config config = Config::from_toml("./config.toml");
+	Common::from_config(config);
+	std::shared_ptr<ConsoleMap> map = std::make_shared<ConsoleMap>(ConsoleMap(
+		config.mapWidth.value,
+		config.mapHeight.value
+	));
+	World world = World::from_grid_file(
+		config.mapWidth.value,
+		config.mapHeight.value,
+		map.get(),
+		config.mapDefinitionsFilePath.value
+	);
+
+	world.set_player_pos({config.playerX.value, config.playerY.value});
+	auto route = world.find_path_to({19, 0});
+	if (route == std::nullopt) {
+		map->draw();
+		std::cout << "\n" "No suitable path" << std::endl;
+		return;
+	}
+	for (auto &tile : *route) {
+		world.set_tile_state(tile, TileState::ROUTE);
+	}
+	map->draw();
+}
+
+int main(int argc, const char **argv) {
+	std::cout << "A* Demo ver 1.1" << std::endl;
+	bool runConsole = false;
+
+	for (u32 i = 1; i < argc; i++) {
+		if (std::string(argv[i]) == "--console")
+			runConsole = true;
+	}
+
+	if (runConsole) {
+		console();
+		return 0;
+	}
 
 	Config config = Config::from_toml("./config.toml");
 	Common::windowSize = {config.screenWidth.value, config.screenHeight.value};

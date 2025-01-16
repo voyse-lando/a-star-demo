@@ -79,6 +79,10 @@ std::string ValueParser::parse(std::optional<std::string> value, const std::stri
 	return value.has_value() ? value.value() : defaultValue;
 }
 template<>
+char ValueParser::parse(std::optional<std::string> value, const char &defaultValue) {
+	return value.has_value() ? value.value()[0] : defaultValue;
+}
+template<>
 u32 ValueParser::parse(std::optional<std::string> value, const u32 &defaultValue) {
 	return value.has_value() ? std::stoul(value.value()) : defaultValue;
 }
@@ -110,6 +114,10 @@ PROP.value = valueParser.parse<TYPE>(prop, PROP.value); }
 
 	SET_PROPERTY(config.playerX, i32);
 	SET_PROPERTY(config.playerY, i32);
+
+	SET_PROPERTY(config.symWall, char);
+	SET_PROPERTY(config.symPath, char);
+	SET_PROPERTY(config.symRoute, char);
 	return config;
 
 #undef SET_PROPERTY

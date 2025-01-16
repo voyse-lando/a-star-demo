@@ -23,6 +23,7 @@ add_executable(Demo
 	src/Common.cpp
 	src/Map/Map.cpp
 	src/Map/Rectangle.cpp
+	src/Map/Tile.cpp
 	src/World/World.cpp
 	src/Config/Config.cpp
 )

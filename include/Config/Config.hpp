@@ -77,6 +77,9 @@ public:
 	Property<i32> playerX = {"map.player", "x", 0};
 	Property<i32> playerY = {"map.player", "y", 0};
 
+	Property<char> symWall = {"map.console", "symWall", '5'};
+	Property<char> symPath = {"map.console", "symPath", '0'};
+	Property<char> symRoute = {"map.console", "symRoute", '.'};
 	static Config from_toml(std::string_view filePath);
 
 	template<class T>

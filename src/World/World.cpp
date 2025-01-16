@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <fstream>
+#include <initializer_list>
 #include <iostream>
 #include <mutex>
 #include <optional>
@@ -11,34 +12,18 @@
 #include <thread>
 #include <vector>
 
-extern const Tile WALL = {TileType::WALL, TileState::DEFAULT};
-extern const Tile PATH = {TileType::PATH, TileState::DEFAULT};
-
-vf4d World::tileColor(const Tile &tile) {
-	static vf4d colors[] = {
-		vf4d{.2f, .2f, .2f, 1.0f},
-		vf4d{.2f, .8f, .2f, 1.0f},
-		vf4d{.8f, .2f, .2f, 1.0f},
-		vf4d{.8f, .8f, .2f, 1.0f},
-		vf4d{.2f, .8f, .8f, 1.0f}
-	};
-	switch (tile.type) {
-	case TileType::WALL:
-		return vf4d{0.05f, 0.05f, 0.05f, 1.0f};
-	case TileType::PATH:
-		return colors[(u32)tile.state];
-	}
-	return vf4d{.0f, .0f, .0f, 1.0f};
-}
 
 World::World(
 	u32 w,
 	u32 h,
-	std::optional<Map> *m,
+	IMap *m,
 	std::initializer_list<Tile> ts
 ) : width(w), height(h), p_map(m)
 {
-	map() = Map(w, h);
+	if (p_map == nullptr) {
+		std::cerr << "Error: World::World(): Map is nullptr\n";
+		throw "";
+	}
 
 	tiles.reserve(w * h);
 	for (i32 i = 0; i < w*h; i++) {
@@ -54,7 +39,7 @@ World::World(
 World World::from_grid_file(
 	u32 w,
 	u32 h,
-	std::optional<Map> *m,
+	IMap *m,
 	const std::string &path	
 ) {
 	World world = World(w, h, m, {});
@@ -99,20 +84,13 @@ World &World::operator=(World &&world) {
 	return *this;
 }
 
-std::optional<Map> &World::map() {
-	return *p_map;
-}
 
 Tile &World::tile(u32 x, u32 y) {
 	return tiles[height * y + x];
 }
 
 void World::update_map() {
-	for (u32 y = 0; y < height; y++) {
-		for (u32 x = 0; x < width; x++) {
-			map()->set_rect_fill(x, y, World::tileColor(tile(x, y)));
-		}
-	}
+	p_map->update_map(tiles);
 }
 
 vi2d World::get_player_pos() { return playerPos.load(); }
@@ -163,19 +141,15 @@ std::vector<vi2d> World::get_neighbours(const vi2d &target) {
 
 	const auto x = target.x, y = target.y;
 	if (y - 1 >= 0 && tile(x, y-1).type != TileType::WALL) {
-		std::cout << "UP " << x << ' ' << y-1 << '\n';
 		ret.push_back({x, y-1});
 	}
 	if (y + 1 < height && tile(x, y+1).type != TileType::WALL) {
-		std::cout << "DOWN " << x << ' ' << y+1 << '\n';
 		ret.push_back({x, y+1});
 	}
 	if (x + 1 < width && tile(x+1, y).type != TileType::WALL) {
-		std::cout << "RIGHT " << x+1 << ' ' << y << '\n';
 		ret.push_back({x+1, y});
 	}
 	if (x - 1 >= 0 && tile(x-1, y).type != TileType::WALL) {
-		std::cout << "LEFT " << x-1 << ' ' << y << '\n';
 		ret.push_back({x-1, y});
 	}
 

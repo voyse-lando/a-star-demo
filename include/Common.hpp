@@ -2,7 +2,6 @@
 #ifndef COMMON_HPP_
 #define COMMON_HPP_
 
-#include <array>
 #include <chrono>
 #include <cstdint> // IWYU pragma: export
 #include <tuple>   // IWYU pragma: export
@@ -20,7 +19,7 @@ template <class T>
 struct v2d {
 	T x, y;
 
-	v2d() : x({}), y({}) {}
+	v2d() {}
 	v2d(const T &x, const T &y) : x(x), y(y) { }
 
 	bool operator==(v2d<T> rhs) const {
@@ -31,7 +30,7 @@ template <class T>
 struct v3d {
 	T x, y, z;
 
-	v3d() : x({}), y({}), z({}) {}
+	v3d() {}
 	v3d(const T &x, const T &y, const T &z) : x(x), y(y), z(z) { }
 
 	bool operator==(v3d<T> rhs) const {
@@ -42,7 +41,7 @@ template <class T>
 struct v4d {
 	T x, y, z, w;
 
-	v4d() : x({}), y({}), z({}), w({}) {}
+	v4d() {}
 	v4d(const T &x, const T &y, const T &z, const T &w) : x(x), y(y), z(z), w(w) { }
 
 	bool operator==(v4d<T> rhs) const {
@@ -65,20 +64,18 @@ typedef v4d<float> vf4d;
 #define V3D_EXPAND(_v3d) _v3d.x, _v3d.y, _v3d.z
 #define V4D_EXPAND(_v4d) _v4d.x, _v4d.y, _v4d.z, _v4d.w
 
+class Config;
+
 using namespace std::chrono_literals;
 class Common {
-private:
-	static std::array<float, 16> projectionScaleMatrix;
-	static std::array<float, 16> projectionTranslateMatrix;
 public:
 	static vu2d windowSize;
-	static float zNear, zFar;
 
 	static std::chrono::milliseconds pathDelay;
 
-	static std::array<float, 16> &get_projection_scale_matrix();
-	static std::array<float, 16> &get_projection_translate_matrix();
-	static void update_projection_matrix();
+	static char symbolWall, symbolPath, symbolRoute;
+
+	static void from_config(const Config &config);
 };
 
 #endif // ! COMMON_HPP_
