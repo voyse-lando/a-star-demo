@@ -14,17 +14,23 @@ namespace toml {
 	typedef std::optional<std::string> Value;
 
 	struct Section {
-	private:
+	protected:
+	public:
 		std::unordered_map<std::string, Value> properties;
+
+		Value property(const std::string &name);
+	};
+
+	struct GlobalSection : public Section {
+	private:
 		std::unordered_map<std::string, Section> sections;
 
 	public:
-		Value property(const std::string &name);
 		std::optional<Section> section(const std::string &name);
 
-		friend Section parse_file(const std::string &fileName);
+		friend GlobalSection parse_file(const std::string &fileName);
 	};
-	extern Section parse_file(const std::string &fileName);
+	extern GlobalSection parse_file(const std::string &fileName);
 };
 
 class NotImplementedYet : public std::exception {

@@ -10,7 +10,7 @@ toml::Value toml::Section::property(const std::string &name) {
 	if (properties.find(name) == properties.end()) return std::nullopt;
 	return properties[name];
 }
-std::optional<toml::Section> toml::Section::section(const std::string &name) {
+std::optional<toml::Section> toml::GlobalSection::section(const std::string &name) {
 	if (sections.find(name) == sections.end()) return std::nullopt;
 	return sections[name];
 }
@@ -26,8 +26,8 @@ inline void right_trim(std::string &str) {
 	}).base(), str.end());
 }
 
-toml::Section toml::parse_file(const std::string &fileName) {
-	Section global;
+toml::GlobalSection toml::parse_file(const std::string &fileName) {
+	GlobalSection global;
 
 	std::ifstream ifs(fileName);
 	if (!ifs.good()) return global;
