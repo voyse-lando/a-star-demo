@@ -58,7 +58,7 @@ World World::from_grid_file(
 		}
 	}
 
-	return World(world);
+	return world;
 }
 
 World::World(const World &world) {

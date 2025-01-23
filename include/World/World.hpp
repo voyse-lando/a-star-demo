@@ -46,8 +46,8 @@ public:
 		const std::string &path	
 	);
 
-	explicit World(const World &world);
-	explicit World(World &&world);
+	World(const World &world);
+	World(World &&world);
 	World &operator=(World &&world);
 	std::optional<std::vector<vi2d>> find_path_to(vi2d target);
 
