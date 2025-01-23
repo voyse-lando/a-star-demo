@@ -107,6 +107,21 @@ void World::set_player_pos(const vi2d &pos) {
 	update_map();
 }
 
+TileType World::get_tile_type(const vi2d &pos) {
+	return tile(V2D_EXPAND(pos)).type;
+}
+TileState World::get_tile_state(const vi2d &pos) {
+	return tile(V2D_EXPAND(pos)).state;
+}
+
+void World::set_tile_type(const vi2d &pos, TileType type) {
+	{
+		std::lock_guard lock(tiles_mutex);
+		tile(V2D_EXPAND(pos)).type = type;
+	}
+	update_map();
+}
+
 void World::set_tile_state(const vi2d &pos, TileState state) {
 	{
 		std::lock_guard lock(tiles_mutex);

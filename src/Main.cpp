@@ -7,6 +7,8 @@
 #include "Common.hpp"
 #include "Engine.hpp"
 #include "Keyboard.hpp"
+#include "Map/Rectangle.hpp"
+#include "Map/Tile.hpp"
 #include "Mouse.hpp"
 #include "Map/Map.hpp"
 #include "Map/GLMap.hpp"
@@ -31,8 +33,10 @@ protected:
 	std::shared_ptr<GLMap> map;
 	std::optional<World> world;
 
-	bool moving, delayChanged;
+	bool moving, delayChanged, editMode;
 	std::future<void> movementResult;
+
+	std::optional<Rectangle> editModeBorder;
 
 public:
 	Config &config;
@@ -52,20 +56,40 @@ public:
 			map.get(),
 			config.mapDefinitionsFilePath.value
 		);
+
+		editModeBorder = Rectangle()
+			.set_border_color({1.0f, 0.0f, 0.0f, 1.0f})
+			.set_fill_color({0.0f, 0.0f, 0.0f, 0.0f})
+			.set_border_size(.005f)
+			.set_scale({1.0f, 1.0f})
+			.set_translate({0.0f, 0.0f});
+
 		world->set_player_pos({config.playerX.value, config.playerY.value});
 		moving = false;
+		editMode = false;
 		delayChanged = false;
 		return true;
 	}
 
 	bool on_update() override {
 		static bool resetConfigHeld = false;
+		static bool editModeHeld = false;
+		static bool mouseButtonHeld = false;
 
 		glClearColor(.2f, .2f, .3f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (!moving && MouseButton::Left.pressed)
+		if (Key::E.pressed && !editModeHeld) {
+			editMode = !editMode;
+			editModeHeld = true;
+		}
+		if (Key::E.released && editModeHeld) {
+			editModeHeld = false;
+		}
+
+		if (!editMode && !moving && !mouseButtonHeld && MouseButton::Left.pressed)
 		{
+			mouseButtonHeld = true;
 			vi2d tilePos = world->screen_to_world(Common::cursorPos);
 			
 			movementResult = std::async([this, &tilePos]() -> void {
@@ -75,7 +99,18 @@ public:
 
 				world->reset_tiles();
 			});
-			std::cout << Common::cursorPos.x << ", " << Common::cursorPos.y << '\n';
+		}
+		if (editMode && !moving && !mouseButtonHeld && MouseButton::Left.pressed)
+		{
+			mouseButtonHeld = true;
+			vi2d tilePos = world->screen_to_world(Common::cursorPos);
+			if (world->get_tile_state(tilePos) == TileState::DEFAULT) {
+				TileType tt = world->get_tile_type(tilePos);
+				world->set_tile_type(tilePos, tt == TileType::WALL ? TileType::PATH : TileType::WALL);
+			}
+		}
+		if (MouseButton::Left.released && mouseButtonHeld) {
+			mouseButtonHeld = false;
 		}
 
 		if (!delayChanged && Key::T.pressed) {
@@ -101,7 +136,9 @@ public:
 			resetConfigHeld = false;
 		}
 
+
 		map->draw();
+		if (editMode) editModeBorder->draw();
 
 		return true;
 	}

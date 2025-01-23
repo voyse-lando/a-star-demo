@@ -45,7 +45,8 @@ bool Engine::construct(u32 width, u32 height)
     window = NULL;
     return false;
   }
-  
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glViewport(0, 0, width, height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
   glfwSetKeyCallback(window, keys::callback);

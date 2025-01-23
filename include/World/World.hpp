@@ -57,7 +57,9 @@ public:
 	void set_player_pos(const vi2d &pos);
 	void move_player_to(vi2d target);
 	
-	// TileState get_tile_state();
+	TileType get_tile_type(const vi2d &pos);
+	TileState get_tile_state(const vi2d &pos);
+	void set_tile_type(const vi2d &pos, TileType type);
 	void set_tile_state(const vi2d &pos, TileState state);
 	void reset_tiles();
 
