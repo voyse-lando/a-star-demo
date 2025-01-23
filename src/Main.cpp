@@ -177,7 +177,7 @@ void console() {
 }
 
 int main(int argc, const char **argv) {
-	std::cout << "A* Demo ver 1.1" << std::endl;
+	std::cout << "A* Demo ver 1.2" << std::endl;
 	bool runConsole = false;
 
 	for (u32 i = 1; i < argc; i++) {
