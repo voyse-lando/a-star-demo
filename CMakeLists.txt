@@ -17,6 +17,8 @@ add_executable(Demo
 	src/Object.cpp
 	src/Shader.cpp
 	src/Common.cpp
+	src/Keyboard.cpp
+	src/Mouse.cpp
 	src/Map/Map.cpp
 	src/Map/GLMap.cpp
 	src/Map/Rectangle.cpp

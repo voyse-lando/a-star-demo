@@ -6,6 +6,8 @@
 // #include "Common.hpp"
 #include "Common.hpp"
 #include "Engine.hpp"
+#include "Keyboard.hpp"
+#include "Mouse.hpp"
 #include "Map/Map.hpp"
 #include "Map/GLMap.hpp"
 #include "World/World.hpp"
@@ -62,13 +64,9 @@ public:
 		glClearColor(.2f, .2f, .3f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
-		if (!moving && state == GLFW_PRESS)
+		if (!moving && MouseButton::Left.pressed)
 		{
-			double xpos, ypos;
-			glfwGetCursorPos(window, &xpos, &ypos);
-
-			vi2d tilePos = world->screen_to_world(vf2d{(float)xpos, (float)ypos});
+			vi2d tilePos = world->screen_to_world(Common::cursorPos);
 			
 			movementResult = std::async([this, &tilePos]() -> void {
 				moving = true;
@@ -77,9 +75,10 @@ public:
 
 				world->reset_tiles();
 			});
+			std::cout << Common::cursorPos.x << ", " << Common::cursorPos.y << '\n';
 		}
 
-		if (!delayChanged && glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
+		if (!delayChanged && Key::T.pressed) {
 			delayChanged = true;
 			if (Common::pathDelay == 0ms) Common::pathDelay = 500ms;
 			else Common::pathDelay = 0ms;
@@ -87,7 +86,7 @@ public:
 			delayChanged = false;
 		}
 
-		if (!resetConfigHeld && !moving && glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+		if (!resetConfigHeld && !moving && Key::R.pressed) {
 			resetConfigHeld = true;
 			config = Config::from_toml("./config.toml");
 			set_window_size({config.screenWidth.value, config.screenHeight.value});
@@ -98,7 +97,7 @@ public:
 				config.mapDefinitionsFilePath.value
 			);
 			world->set_player_pos({config.playerX.value, config.playerY.value});
-		} else if (resetConfigHeld && glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
+		} else if (resetConfigHeld && Key::R.released) {
 			resetConfigHeld = false;
 		}
 

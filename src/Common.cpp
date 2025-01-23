@@ -3,6 +3,7 @@
 #include <chrono>
 
 vu2d Common::windowSize = {600, 600};
+vf2d Common::cursorPos = {0.0f, 0.0f };
 
 std::chrono::milliseconds Common::pathDelay = 0ms;
 

@@ -4,6 +4,8 @@
 #include <iostream>
 #include "Engine.hpp"
 #include "Common.hpp"
+#include "Keyboard.hpp"
+#include "Mouse.hpp"
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -45,7 +47,10 @@ bool Engine::construct(u32 width, u32 height)
   }
   
   glViewport(0, 0, width, height);
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); 
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  glfwSetKeyCallback(window, keys::callback);
+  glfwSetMouseButtonCallback(window, mouse::button_callback);
+  glfwSetCursorPosCallback(window, mouse::position_callback);
   return true;
 }
 

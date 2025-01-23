@@ -70,6 +70,7 @@ using namespace std::chrono_literals;
 class Common {
 public:
 	static vu2d windowSize;
+	static vf2d cursorPos;
 
 	static std::chrono::milliseconds pathDelay;
 

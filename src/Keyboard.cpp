@@ -1,0 +1,185 @@
+#include "GLFW/glfw3.h"
+#include "Keyboard.hpp"
+
+// I P H R | P+ H+ R+
+// --------|---------
+// 0 0 0 1 | 0  0  1 
+// 1 0 0 1 | 1  1  0
+// 1 1 1 0 | 0  1  0
+// 1 0 1 0 | 0  1  0
+// 0 0 1 0 | 0  0  1
+
+void Key::press() {
+	pressed = true;
+	held = false;
+	released = false;
+}
+void Key::hold() {
+	pressed = false;
+	held = true;
+	released = false;
+}
+void Key::release() {
+	pressed = false;
+	held = false;
+	released = true;
+}
+
+
+void keys::callback(GLFWwindow *window, i32 key, i32 scancode, i32 action, i32 mods) {
+	if (action == GLFW_RELEASE) Key::glfwToKey.at(key)->release();
+	else if (action == GLFW_REPEAT) Key::glfwToKey.at(key)->hold();
+	else Key::glfwToKey.at(key)->press();
+}
+// #region Keys
+
+#define DEF_KEY_MAPPING(glfw, key) {GLFW_KEY_##glfw, &key},
+const std::unordered_map<i32, Key *const> Key::glfwToKey = {
+	DEF_KEY_MAPPING(SPACE, Space)
+	DEF_KEY_MAPPING(APOSTROPHE, Apostrophe)
+	DEF_KEY_MAPPING(COMMA, Comma)
+	DEF_KEY_MAPPING(MINUS, Minus)
+	DEF_KEY_MAPPING(PERIOD, Period)
+	DEF_KEY_MAPPING(SLASH, Slash)
+	DEF_KEY_MAPPING(0, N0)
+	DEF_KEY_MAPPING(1, N1)
+	DEF_KEY_MAPPING(2, N2)
+	DEF_KEY_MAPPING(3, N3)
+	DEF_KEY_MAPPING(4, N4)
+	DEF_KEY_MAPPING(5, N5)
+	DEF_KEY_MAPPING(6, N6)
+	DEF_KEY_MAPPING(7, N7)
+	DEF_KEY_MAPPING(8, N8)
+	DEF_KEY_MAPPING(9, N9)
+	DEF_KEY_MAPPING(SEMICOLON, Semicolon)
+	DEF_KEY_MAPPING(EQUAL, Equal)
+	DEF_KEY_MAPPING(A, A)
+	DEF_KEY_MAPPING(B, B)
+	DEF_KEY_MAPPING(C, C)
+	DEF_KEY_MAPPING(D, D)
+	DEF_KEY_MAPPING(E, E)
+	DEF_KEY_MAPPING(F, F)
+	DEF_KEY_MAPPING(G, G)
+	DEF_KEY_MAPPING(H, H)
+	DEF_KEY_MAPPING(I, I)
+	DEF_KEY_MAPPING(J, J)
+	DEF_KEY_MAPPING(K, K)
+	DEF_KEY_MAPPING(L, L)
+	DEF_KEY_MAPPING(M, M)
+	DEF_KEY_MAPPING(N, N)
+	DEF_KEY_MAPPING(O, O)
+	DEF_KEY_MAPPING(P, P)
+	DEF_KEY_MAPPING(Q, Q)
+	DEF_KEY_MAPPING(R, R)
+	DEF_KEY_MAPPING(S, S)
+	DEF_KEY_MAPPING(T, T)
+	DEF_KEY_MAPPING(U, U)
+	DEF_KEY_MAPPING(V, V)
+	DEF_KEY_MAPPING(W, W)
+	DEF_KEY_MAPPING(X, X)
+	DEF_KEY_MAPPING(Y, Y)
+	DEF_KEY_MAPPING(Z, Z)
+	DEF_KEY_MAPPING(LEFT_BRACKET, LeftBracket)
+	DEF_KEY_MAPPING(BACKSLASH, BackSlash)
+	DEF_KEY_MAPPING(RIGHT_BRACKET, RightBracket)
+	DEF_KEY_MAPPING(GRAVE_ACCENT, GraveAccent)
+	DEF_KEY_MAPPING(WORLD_1, World1)
+	DEF_KEY_MAPPING(WORLD_2, World2)
+	DEF_KEY_MAPPING(ESCAPE, Escape)
+	DEF_KEY_MAPPING(ENTER, Enter)
+	DEF_KEY_MAPPING(TAB, Tab)
+	DEF_KEY_MAPPING(BACKSPACE, Backspace)
+	DEF_KEY_MAPPING(INSERT, Insert)
+	DEF_KEY_MAPPING(DELETE, Delete)
+	DEF_KEY_MAPPING(RIGHT, Right)
+	DEF_KEY_MAPPING(LEFT, Left)
+	DEF_KEY_MAPPING(DOWN, Down)
+	DEF_KEY_MAPPING(UP, Up)
+	DEF_KEY_MAPPING(PAGE_UP, PageUp)
+	DEF_KEY_MAPPING(PAGE_DOWN, PageDown)
+	DEF_KEY_MAPPING(HOME, Home)
+	DEF_KEY_MAPPING(END, End)
+	DEF_KEY_MAPPING(CAPS_LOCK, CapsLock)
+	DEF_KEY_MAPPING(SCROLL_LOCK, ScrollLock)
+	DEF_KEY_MAPPING(NUM_LOCK, NumLock)
+	DEF_KEY_MAPPING(PRINT_SCREEN, PrintScreen)
+	DEF_KEY_MAPPING(PAUSE, Pause)
+	DEF_KEY_MAPPING(F1, F1)
+	DEF_KEY_MAPPING(F2, F2)
+	DEF_KEY_MAPPING(F3, F3)
+	DEF_KEY_MAPPING(F4, F4)
+	DEF_KEY_MAPPING(F5, F5)
+	DEF_KEY_MAPPING(F6, F6)
+	DEF_KEY_MAPPING(F7, F7)
+	DEF_KEY_MAPPING(F8, F8)
+	DEF_KEY_MAPPING(F9, F9)
+	DEF_KEY_MAPPING(F10, F10)
+	DEF_KEY_MAPPING(F11, F11)
+	DEF_KEY_MAPPING(F12, F12)
+	DEF_KEY_MAPPING(F13, F13)
+	DEF_KEY_MAPPING(F14, F14)
+	DEF_KEY_MAPPING(F15, F15)
+	DEF_KEY_MAPPING(F16, F16)
+	DEF_KEY_MAPPING(F17, F17)
+	DEF_KEY_MAPPING(F18, F18)
+	DEF_KEY_MAPPING(F19, F19)
+	DEF_KEY_MAPPING(F20, F20)
+	DEF_KEY_MAPPING(F21, F21)
+	DEF_KEY_MAPPING(F22, F22)
+	DEF_KEY_MAPPING(F23, F23)
+	DEF_KEY_MAPPING(F24, F24)
+	DEF_KEY_MAPPING(F25, F25)
+	DEF_KEY_MAPPING(KP_0, KP0)
+	DEF_KEY_MAPPING(KP_1, KP1)
+	DEF_KEY_MAPPING(KP_2, KP2)
+	DEF_KEY_MAPPING(KP_3, KP3)
+	DEF_KEY_MAPPING(KP_4, KP4)
+	DEF_KEY_MAPPING(KP_5, KP5)
+	DEF_KEY_MAPPING(KP_6, KP6)
+	DEF_KEY_MAPPING(KP_7, KP7)
+	DEF_KEY_MAPPING(KP_8, KP8)
+	DEF_KEY_MAPPING(KP_9, KP9)
+	DEF_KEY_MAPPING(KP_DECIMAL, KPDecimal)
+	DEF_KEY_MAPPING(KP_DIVIDE, KPDivide)
+	DEF_KEY_MAPPING(KP_MULTIPLY, KPMultiply)
+	DEF_KEY_MAPPING(KP_SUBTRACT, KPSubtract)
+	DEF_KEY_MAPPING(KP_ADD, KPAdd)
+	DEF_KEY_MAPPING(KP_ENTER, KPEnter)
+	DEF_KEY_MAPPING(KP_EQUAL, KPEqual)
+	DEF_KEY_MAPPING(LEFT_SHIFT, LeftShift)
+	DEF_KEY_MAPPING(LEFT_CONTROL, LeftControl)
+	DEF_KEY_MAPPING(LEFT_ALT, LeftAlt)
+	DEF_KEY_MAPPING(LEFT_SUPER, LeftSuper)
+	DEF_KEY_MAPPING(RIGHT_SHIFT, RightShift)
+	DEF_KEY_MAPPING(RIGHT_CONTROL, RightControl)
+	DEF_KEY_MAPPING(RIGHT_ALT, RightAlt)
+	DEF_KEY_MAPPING(RIGHT_SUPER, RightSuper)
+	DEF_KEY_MAPPING(MENU, Menu)
+};
+
+#define INIT_KEY(name) Key Key::name = Key();
+FOR_EACH(INIT_KEY,
+	Space, Apostrophe, Comma, Minus, Period, Slash,
+	N0, N1, N2, N3, N4, N5, N6, N7, N8, N9,
+	Semicolon, Equal,
+	A, B, C, D, E, F, G, 
+	H, I, J, K, L, M, N,
+	O, P, Q, R, S, T, U,
+	V, W, X, Y, Z,
+	LeftBracket, BackSlash, RightBracket, GraveAccent,
+	World1, World2,
+	Escape, Enter, Tab, Backspace,
+	Insert, Delete, Right, Left, Down, Up,
+	PageUp, PageDown, Home, End,
+	CapsLock, ScrollLock, NumLock, PrintScreen, Pause,
+	F1, F2, F3, F4, F5, F6, F7, F8, F9, F10,
+	F11, F12, F13, F14, F15, F16, F17, F18, F19, F20,
+	F21, F22, F23, F24, F25,
+	KP0, KP1, KP2, KP3, KP4, KP5, KP6, KP7, KP8, KP9,
+	KPDecimal, KPDivide, KPMultiply, KPSubtract, KPAdd, KPEnter, KPEqual,
+	LeftShift, LeftControl, LeftAlt, LeftSuper,
+	RightShift, RightControl, RightAlt, RightSuper,
+	Menu
+)
+
+// #endregion Keys
