@@ -7,6 +7,7 @@
 #include "Common.hpp"
 #include "Engine.hpp"
 #include "Map/Map.hpp"
+#include "Map/GLMap.hpp"
 #include "World/World.hpp"
 #include "Config/Config.hpp"
 // #include "PathFind/Map.hpp"

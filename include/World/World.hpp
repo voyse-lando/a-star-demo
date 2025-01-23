@@ -4,6 +4,8 @@
 #include "Common.hpp"
 #include "Map/Map.hpp"
 #include "Map/Tile.hpp"
+#include <atomic>
+#include <mutex>
 #include <optional>
 #include <vector>
 
