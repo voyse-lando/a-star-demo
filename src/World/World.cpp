@@ -146,11 +146,11 @@ std::vector<vi2d> World::get_neighbours(const vi2d &target) {
 	if (y + 1 < height && tile(x, y+1).type != TileType::WALL) {
 		ret.push_back({x, y+1});
 	}
-	if (x + 1 < width && tile(x+1, y).type != TileType::WALL) {
-		ret.push_back({x+1, y});
-	}
 	if (x - 1 >= 0 && tile(x-1, y).type != TileType::WALL) {
 		ret.push_back({x-1, y});
+	}
+	if (x + 1 < width && tile(x+1, y).type != TileType::WALL) {
+		ret.push_back({x+1, y});
 	}
 
 	return ret;
