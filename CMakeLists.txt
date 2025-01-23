@@ -52,7 +52,8 @@ if (WIN32)
 	)
 elseif (UNIX)
 	target_link_libraries(Demo
-		glfw GLAD OpenGL::GL X11::X11 X11::Xrandr X11::Xi atomic dl
+		glfw GLAD OpenGL::GL  atomic dl
 	)
 endif ()
+# X11::X11 X11::Xrandr X11::Xi
 
